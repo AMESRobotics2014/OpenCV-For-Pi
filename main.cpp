@@ -1,7 +1,7 @@
 #include "opencv2/core/core.hpp"
 #include "opencv2/flann/miniflann.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
-//#include "opencv2/photo/photo.hpp"
+#include "opencv2/photo/photo.hpp"
 #include "opencv2/video/video.hpp"
 #include "opencv2/features2d/features2d.hpp"
 #include "opencv2/objdetect/objdetect.hpp"
@@ -19,6 +19,8 @@
 using namespace std;
 using namespace cv;
 char key;
+int counter = 0;
+const char* name;
 int main()
 {
    cvNamedWindow("Camera_Output", 1);
@@ -32,6 +34,12 @@ int main()
 
 	if (char(key) == 27) {
 	   break;	
+	}
+
+	if (char(key) == 99) {
+	   counter++;
+	   
+	   cvSaveImage((char)counter + ".pgm", frame);	
 	}
    }
 
