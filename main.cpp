@@ -1,7 +1,7 @@
 #include "opencv2/core/core.hpp"
 #include "opencv2/flann/miniflann.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
-#include "opencv2/photo/photo.hpp"
+//#include "opencv2/photo/photo.hpp"
 #include "opencv2/video/video.hpp"
 #include "opencv2/features2d/features2d.hpp"
 #include "opencv2/objdetect/objdetect.hpp"
@@ -19,29 +19,91 @@
 using namespace std;
 using namespace cv;
 char key;
-int counter = 0;
-const char* name;
+//int counter = 0;
+//const char* name;
+
+double TAPELIMIT = 50;
+double VERTICALLIMIT = 50;
+double LRLimit = 50;
+
+struct Scores {
+   double rectangularity;
+double aspectRatioVertical;
+double aspectRatioHorizontal;
+};
+
+struct TargetReport {
+int verticalIndex;
+int horizontalIndex;
+bool hot;
+double totalScore;
+double leftScore; 
+double rightScore;
+double tapeWidthScore;
+double verticalScore;
+};
+
 int main()
 {
-   cvNamedWindow("Camera_Output", 1);
+  
+   cvNamedWindow("Camera_Output2", 1);
    CvCapture* capture = cvCaptureFromCAM(0);
-   while (1)
+   do
    {
 	IplImage* frame = cvQueryFrame(capture);
-	cvShowImage("Camera_Output", frame);
+	IplImage* gray = cvCreateImage(cvGetSize(frame),8,1);
+	CvSeq* contours;
+	CvSeq* result;
+	CvMemStorage* storage = cvCreateMemStorage(0);
+	//cvShowImage("Camera_Output", frame);
 	//cvSaveImage("soome.pgm", &frame);
 	key = cvWaitKey(10);
 
+	cvCvtColor(frame,gray,CV_BGR2GRAY);
+	cvThreshold(gray,gray,32,255,CV_THRESH_BINARY);
+
+	cvShowImage("Camera_Output2", gray);
+
+	cvFindContours(gray, storage,&contours, sizeof(CvContour), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE, cvPoint(0,0));	
+	
+	while (contours) {
+	   result = cvApproxPoly(contours, sizeof(CvContour), storage, CV_POLY_APPROX_DP, cvContourPerimeter(contours)*0.02, 0);
+
+	   if (result -> total == 4) {
+                
+		CvPoint *pt[4];
+
+	     	for (int i = 0; i < 4; i++) {
+		    pt[i] = (CvPoint*)cvGetSeqElem(result, i);
+		}
+
+		cvLine(frame, *pt[0], *pt[1], cvScalar(0, 255, 0), 4);
+		cvLine(frame, *pt[1], *pt[2], cvScalar(0, 255, 0), 4);
+		cvLine(frame, *pt[2], *pt[3], cvScalar(0, 255, 0), 4);
+		cvLine(frame, *pt[3], *pt[0], cvScalar(0, 255, 0), 4);
+	   }
+	    contours = contours->h_next;
+	}
+	
+
 	if (char(key) == 27) {
+	 // cvDestroyAllWindows();
+	 // cvReleaseMemStorage(&storage);
+	 // cvReleaseImage(frame);
+	 // cvReleaseImage(gray);
 	   break;	
 	}
 
 	if (char(key) == 99) {
-	   counter++;
+	   //counter++;
 	   
-	   cvSaveImage((char)counter + ".pgm", frame);	
+	   cvSaveImage("Im age Bro.pgm", gray);	
 	}
-   }
+
+	//cvShowImage("Camera_Output2", gray);
+
+	
+   }while(true);
 
    cvReleaseCapture(&capture);
    cvDestroyWindow("Camera_Output");
