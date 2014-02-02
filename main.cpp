@@ -22,6 +22,8 @@ char key;
 //int counter = 0;
 //const char* name;
 
+//Hey ALi- we can access the points through pt[1]->x and pt[1]->y. I will try to set up some basic code on the issue tonight.
+
 double TAPELIMIT = 50;
 double VERTICALLIMIT = 50;
 double LRLimit = 50;
@@ -76,11 +78,21 @@ int main()
 	     	for (int i = 0; i < 4; i++) {
 		    pt[i] = (CvPoint*)cvGetSeqElem(result, i);
 		}
+		
+		
+		
+		//cout << pt[0]->x<<endl;
+		//cout << *pt[1]<<endl;
+		//cout << *pt[2]<<endl;
+		//cout << *pt[3]<<endl;
+		
+		//cvLine(frame, *pt[0], *pt[1], cvScalar(0, 255, 0), 4);
+		//cvLine(frame, *pt[1], *pt[2], cvScalar(0, 255, 0), 4);
+		//cvLine(frame, *pt[2], *pt[3], cvScalar(0, 255, 0), 4);
+		//cvLine(frame, *pt[3], *pt[0], cvScalar(0, 255, 0), 4);
 
-		cvLine(frame, *pt[0], *pt[1], cvScalar(0, 255, 0), 4);
-		cvLine(frame, *pt[1], *pt[2], cvScalar(0, 255, 0), 4);
-		cvLine(frame, *pt[2], *pt[3], cvScalar(0, 255, 0), 4);
-		cvLine(frame, *pt[3], *pt[0], cvScalar(0, 255, 0), 4);
+		cvBoundingRect(pt,0);
+
 	   }
 	    contours = contours->h_next;
 	}
