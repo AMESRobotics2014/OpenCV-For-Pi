@@ -33,7 +33,7 @@ int main()
    do
    {
 	IplImage* frame = cvQueryFrame(capture);
-	IplImage* graybefore = cvCreateImage(cvGetSize(frame),8,1);
+	//IplImage* graybefore = cvCreateImage(cvGetSize(frame),8,1);
 	IplImage* gray = cvCreateImage(cvGetSize(frame),8,1);
 	CvSeq* contours;
 	CvSeq* result;
@@ -42,8 +42,8 @@ int main()
 	//cvSaveImage("soome.pgm", &frame);
 	key = cvWaitKey(10);
 
-	cvCvtColor(frame,graybefore,CV_BGR2GRAY);
-	graybefore = gray + Scalar(75,75,75);
+	//cvCvtColor(frame,graybefore,CV_BGR2GRAY);
+	//graybefore = gray + Scalar(75,75,75);
 	cvThreshold(gray,gray,64,255,CV_THRESH_BINARY);
 
 	cvShowImage("Camera_Output2", gray);
