@@ -22,28 +22,8 @@ char key;
 //int counter = 0;
 //const char* name;
 
-//Hey ALi- we can access the points through pt[1]->x and pt[1]->y. I will try to set up some basic code on the issue tonight.
-
-double TAPELIMIT = 50;
-double VERTICALLIMIT = 50;
-double LRLimit = 50;
-
-struct Scores {
-   double rectangularity;
-double aspectRatioVertical;
-double aspectRatioHorizontal;
-};
-
-struct TargetReport {
-int verticalIndex;
-int horizontalIndex;
-bool hot;
-double totalScore;
-double leftScore; 
-double rightScore;
-double tapeWidthScore;
-double verticalScore;
-};
+float area, areavert, areahori, totarea;
+int x;
 
 int main()
 {
@@ -53,6 +33,7 @@ int main()
    do
    {
 	IplImage* frame = cvQueryFrame(capture);
+	IplImage* graybefore = cvCreateImage(cvGetSize(frame),8,1);
 	IplImage* gray = cvCreateImage(cvGetSize(frame),8,1);
 	CvSeq* contours;
 	CvSeq* result;
@@ -61,13 +42,14 @@ int main()
 	//cvSaveImage("soome.pgm", &frame);
 	key = cvWaitKey(10);
 
-	cvCvtColor(frame,gray,CV_BGR2GRAY);
+	cvCvtColor(frame,graybefore,CV_BGR2GRAY);
+	graybefore = gray + Scalar(75,75,75);
 	cvThreshold(gray,gray,64,255,CV_THRESH_BINARY);
 
-	//cvShowImage("Camera_Output2", gray);
+	cvShowImage("Camera_Output2", gray);
 
 	cvFindContours(gray, storage,&contours, sizeof(CvContour), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE, cvPoint(0,0));	
-
+	x=0;
 	while (contours) {
 	   result = cvApproxPoly(contours, sizeof(CvContour), storage, CV_POLY_APPROX_DP, cvContourPerimeter(contours)*0.02, 0);
 
@@ -84,32 +66,24 @@ int main()
 		//cout << pt[2]->x<< ", "  << pt[2]->y << endl;
 		//cout << pt[3]->x<< ", "  << pt[3]->y << endl;
 
-
 	        //float heightOne = pt[3]->y - pt[0]->y;
 		//float hieghtTwo = pt[2]->y - pt[1]->y;
 		//float side = (hieghtOne + hieghtTwo)/2;
 
-	        float sidethree = pt[1]->x - pt[0]->x;
-		//float sidefour = pt[3]->x - pt[2]->x;
-		//float otherside = (sidethree + sidefour)/2;
-		//cout <<"hieght:"<< hieghtOne <<endl;
-		//cout <<"Length 2"<< otherside <<endl;
-           	
-
-
 		float sideleft = pt[1] -> y - pt[0] -> y;
 		float sideright = pt[3] -> y - pt[2] ->y;
-		float  height =(sideleft + sideright)/2;
+		float  height = (sideleft + sideright)/2;
 
 		float sidetop = pt[2] -> x - pt[0] -> x;
 		float sidebottom = pt[3] -> x - pt[1] -> x;
-		float  width =(sidetop + sidebottom)/2;
+		float  width = (sidetop + sidebottom)/2;
 
-		float area = height * width;
-		if(area>x){
-		float areavert = area;
+		//area = height * width;
+		//cout<<area<<endl;
+		if(x==2){
+		//cout << "Hot" <<endl;
 		}else{
-		float areahori = area;
+		//cout << "Not Hot" <<endl;
 		}
 
 		cvLine(frame, *pt[0], *pt[0], cvScalar(0, 255, 0), 4);
@@ -118,11 +92,11 @@ int main()
 		cvLine(frame, *pt[3], *pt[3], cvScalar(0, 255, 0), 4);
 
 	   }
-	    contours = contours->h_next;
-//cvShowImage("Camera_Output2", gray);
-	float totarea = areavert + areahori;
+	    	contours = contours->h_next;
+		x++;
+
 	}
-cvShowImage("Camera_Output2", frame);
+	//cvShowImage("Camera_Output2", frame);
 
 	if (char(key) == 27) {
 	 // cvDestroyAllWindows();
