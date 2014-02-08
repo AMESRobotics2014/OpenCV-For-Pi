@@ -20,10 +20,26 @@ using namespace std;
 using namespace cv;
 char key;
 
+boolean hot;
 
+int auto(a,b)
+{
+	float area = a * b;
+	
+	if(area > 450 && area < 640) {
+	cout << "Hot" << endl;
+	hot = true;
+	}
+/*
+	if(area > 100) {
+	cout << area << endl;
+	}
+*/
+}
 
 int main()
 {
+   hot = false;
    //VideoCapture imgcapture(CV_CAP_ANY);
    cvNamedWindow("Camera_Output2", 1);
    CvCapture* capture = cvCreateCameraCapture(0);
@@ -84,18 +100,7 @@ int main()
 		cvLine(frame, *pt[2], *pt[3], cvScalar(0, 255, 0), 4);
 		cvLine(frame, *pt[3], *pt[0], cvScalar(0, 255, 0), 4);
 
-		float area = width * height;
-/*
-		if(area > 100) {
-		cout << area << endl;
-}
-*/
-
-
-		if(area > 450 && area < 640) {
-		cout << "Hot" << endl;
-}
-
+		hot = auto(height, width);
 	   }
 	    	contours = contours->h_next;
 
