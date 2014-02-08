@@ -95,7 +95,28 @@ int main()
 		//cout <<"pt 1: " << pt[1]->x<< ", "  << pt[1]->y << endl;
 		//cout <<"pt 2: " << pt[2]->x<< ", "  << pt[2]->y << endl;
 		//cout <<"pt 3: " << pt[3]->x<< ", "  << pt[3]->y << endl;
-/*
+
+	avgy = (pt[0]->y + pt[2]->y + pt[3]->y + pt[4]->y)/4;
+	avgx = (pt[0]->x + pt[2]->x + pt[3]->x + pt[4]->x)/4;
+
+
+	for(int a = 0;a < 4;a++)
+	{
+		if(pt[a]->y > avgy && pt[a]->x > avgx) {
+		npt[0]=pt[a];
+	}
+		if(pt[a]->y > avgy && pt[a]->x > avgx) {
+		npt[1]=pt[a];
+	}
+		if(pt[a]->y > avgy && pt[a]->x > avgx) {
+		npt[2] = pt[a];
+	}
+		if(pt[a]->y > avgy && pt[a]->x > avgx) {
+		npt[3] = pt[a];
+	}
+
+	}
+
 		float sideleft = pt[1] -> y - pt[0] -> y;	
 		float sideright = pt[2] -> y - pt[3] -> y;
 		sideleft = abs(sideleft);
@@ -107,42 +128,21 @@ int main()
 		float sidetop = pt[2] -> x - pt[0] -> x;
 		float sidebottom = pt[3] -> x - pt[1] -> x;
 		float  width = (sidetop + sidebottom)/2;
+
+/*
+		if(height > 0) {
+		cout << height <<endl;
+		}
+
+		if(width > 0) {
+		cout << width << endl;
+		}
 */
 
-avgy = (pt[0]->y + pt[2]->y + pt[3]->y + pt[4]->y)/4;
-avgx = (pt[0]->x + pt[2]->x + pt[3]->x + pt[4]->x)/4;
-
-
-for(int a = 0;a < 4;a++)
-{
-	if(pt[a]->y > avgy && pt[a]->x > avgx) {
-	npt[0]=pt[a];
-}
-	if(pt[a]->y > avgy && pt[a]->x > avgx) {
-	npt[1]=pt[a];
-}
-	if(pt[a]->y > avgy && pt[a]->x > avgx) {
-	npt[2] = pt[a];
-}
-	if(pt[a]->y > avgy && pt[a]->x > avgx) {
-	npt[3] = pt[a];
-}
-
-}
-
-//		if(height > 0) {
-//		cout << height <<endl;
-//}
-
-//		if(width > 0) {
-//		cout << width << endl;
-//}
-
-
 		cvLine(frame, *pt[0], *pt[1], cvScalar(0, 255, 0), 4);
-		//cvLine(frame, *pt[1], *pt[2], cvScalar(0, 255, 0), 4);
-		//cvLine(frame, *pt[2], *pt[3], cvScalar(0, 255, 0), 4);
-		//cvLine(frame, *pt[3], *pt[0], cvScalar(0, 255, 0), 4);
+		cvLine(frame, *pt[1], *pt[2], cvScalar(0, 255, 0), 4);
+		cvLine(frame, *pt[2], *pt[3], cvScalar(0, 255, 0), 4);
+		cvLine(frame, *pt[3], *pt[0], cvScalar(0, 255, 0), 4);
 
 		hot = autonomous(height, width);
 
