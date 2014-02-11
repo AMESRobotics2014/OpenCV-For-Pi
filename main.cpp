@@ -151,6 +151,16 @@ int main()
 */
 		int red = 0;
 		int green = 255;
+		
+		hot = autonomous(height, width);
+/*
+		if(hot == true) {
+		cout << "Goal is Hot" << endl;
+		}
+		else {
+		cout << "Goal is Cool" <<endl;
+		}
+*/
 
 		if (hot) {
 			red = 255;
@@ -161,24 +171,13 @@ int main()
 			green = 255;
 		}
 
+		double distancefinal = teleop(height, width);
+		//cout << distancefinal << endl;
+
 		cvLine(frame, *pt[0], *pt[1], cvScalar(0, green, red), 4);
 		cvLine(frame, *pt[1], *pt[2], cvScalar(0, green, red), 4);
 		cvLine(frame, *pt[2], *pt[3], cvScalar(0, green, red), 4);
 		cvLine(frame, *pt[3], *pt[0], cvScalar(0, green, red), 4);
-
-		hot = autonomous(height, width);
-/*
-		if(hot == true) {
-		cout << "Goal is Hot" << endl;
-		}
-		else {
-		cout << "Goal is Cool" <<endl;
-		}
-*/
-		double distancefinal = teleop(height, width);
-		//cout << distancefinal << endl;
-
-
 
 	   }
 	    	contours = contours->h_next;
