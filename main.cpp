@@ -24,19 +24,22 @@ char key;
 bool hot;
 
 //public static removeNoise(int a, int b){
-float area = a * b;
+//float area = a * b;
 
- //if(area < 640){
+ //if(area < smallarea){
    //omit
 // }return area;
 //}return area;
 
-bool autonomous ()
+bool autonomous (double a, double  b)
 {
 	hot = false;
-	//cout << area << endl;
 
-	if(area > 400 && area < 640) {
+	double area = a * b;
+
+	cout << area << endl;
+
+	if(area > 660 && area < 760) {
 	//cout << "Hot" << endl;
 	hot = true;
 	}
@@ -47,16 +50,22 @@ bool autonomous ()
 */
 	return hot;
 }
-
+//		height,width
 double teleop (float a, float b)
 {
-	double distance;
+	double distance, firstd, secondd;
 
- 	if(a<b) {
+ 	if(a>b) {
 
-	distance = 44.099407801909 * pow(0.91175211621759,a);
+	firstd = 44.099407801909 * pow(0.91175211621759,a);
 
 }
+	if(b>a) {
+
+	secondd = 1234 * pow(234,a);
+
+}
+	distance = (firstd + secondd)/2;
 
 	return distance;
 }
@@ -81,7 +90,7 @@ int main()
 	key = cvWaitKey(10);
 
 	cvCvtColor(frame,gray,CV_BGR2GRAY);
-	cvThreshold(gray,gray,10,255,CV_THRESH_BINARY);
+	cvThreshold(gray,gray,80,255,CV_THRESH_BINARY);
 
 	//cvShowImage("Camera_Output2", gray);
 
@@ -102,32 +111,23 @@ int main()
 		//cout <<"pt 1: " << pt[1]->x<< ", "  << pt[1]->y << endl;
 		//cout <<"pt 2: " << pt[2]->x<< ", "  << pt[2]->y << endl;
 		//cout <<"pt 3: " << pt[3]->x<< ", "  << pt[3]->y << endl
-int ptzeroy=pt[0]->y;
-int ptoney=pt[1]->y;
-int pttwoy=pt[2]->y;
-int ptthreey=pt[3]->y;
-//	int avgy = (pt[0]->y) + (pt[1]->y) + (pt[2]->y) + (pt[3]->y))/4;
-	int avgy = ((ptzeroy) + (ptoney) + (pttwoy) + (ptthreey))/4;
-
-//	cout << "asdf" << endl;
+	int ptzeroy=pt[0]->y;
+	int ptoney=pt[1]->y;
+	int pttwoy=pt[2]->y;
+	int ptthreey=pt[3]->y;
+	int avgy = ((ptzeroy) + (ptoney) + (pttwoy) + (ptthreey));
 	int avgx = ((pt[0]->x) + (pt[1]->x) + (pt[2]->x) + (pt[3]->x))/4;
-	for(int a = 0;a < 4;a++)
-	{
-//		cout << "asdf" << endl;
+	for(int a = 0;a < 4;a++) {
 		if(pt[a]->y > avgy && pt[a]->x > avgx) {
-//		cout << "asd;flkjasdf" << endl;
 		npt[0]= *pt[a];
 	}
 		if(pt[a]->y < avgy && pt[a]->x > avgx) {
-//		cout << "asd;flkjasdf" << endl;
 		npt[1]= *pt[a];
 	}
 		if(pt[a]->y > avgy && pt[a]->x < avgx) {
-//		cout << "asd;flkjasdf" << endl;
 		npt[2] = *pt[a];
 	}
 		if(pt[a]->y < avgy && pt[a]->x < avgx) {
-//		cout << "asd;flkjasdf" << endl;
 		npt[3] = *pt[a];
 	}
 
@@ -140,7 +140,7 @@ int ptthreey=pt[3]->y;
 		float sidetop = npt[2].x - npt[0].x;
 		float sidebottom = npt[3].x - npt[1].x;
 		float  width = (sidetop + sidebottom)/2;
-
+/*
 		if(height > 0) {
 		cout << height <<endl;
 		}
@@ -148,8 +148,10 @@ int ptthreey=pt[3]->y;
 		if(width > 0) {
 		cout << width << endl;
 		}
+*/
 		int red = 0;
 		int green = 255;
+
 		if (hot) {
 			red = 255;
 			green = 0;
@@ -165,13 +167,14 @@ int ptthreey=pt[3]->y;
 		cvLine(frame, *pt[3], *pt[0], cvScalar(0, green, red), 4);
 
 		hot = autonomous(height, width);
-
+/*
 		if(hot == true) {
 		cout << "Goal is Hot" << endl;
-		}/*
+		}
 		else {
 		cout << "Goal is Cool" <<endl;
-		}*/
+		}
+*/
 		double distancefinal = teleop(height, width);
 		//cout << distancefinal << endl;
 
