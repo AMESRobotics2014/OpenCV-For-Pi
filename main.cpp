@@ -98,7 +98,7 @@ int main()
 	key = cvWaitKey(10);
 
 	cvCvtColor(frame,gray,CV_BGR2GRAY);
-	cvThreshold(gray,gray,62,255,CV_THRESH_BINARY);
+	cvThreshold(gray,gray,70,255,CV_THRESH_BINARY);
 
 	//cvShowImage("Camera_Output2", frame2);
 	cvShowImage("Camera_Output2", gray);
