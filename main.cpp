@@ -214,19 +214,19 @@ int main()
 	}
 
 	if (char(key) == 49) {
-		cvSaveImage("real5ft.jpg", frame);
+		cvSaveImage("real5ft.jpg", gray);
 }
 	if (char(key) == 50) {
-		cvSaveImage("real7ft6in.jpg",frame);
+		cvSaveImage("real7ft6in.jpg",gray);
 }
 	if (char(key) == 51) {
-		cvSaveImage("real10ft.jpg",frame);
+		cvSaveImage("real10ft.jpg",gray);
 }
 	if (char(key) == 52) {
-		cvSaveImage("real12ft6in.jpg", frame);
+		cvSaveImage("real12ft6in.jpg", gray);
 }
 	if (char(key) == 53) {
-		cvSaveImage("real15ft.jpg", frame);
+		cvSaveImage("real15ft.jpg", gray);
 }
 if (char(key) == 54) {
 		cvSaveImage("real17ft6in.jpg", frame);
