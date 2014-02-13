@@ -46,7 +46,7 @@ if (area < 3) {
 	//cout << "Hot" << endl;
 	hot = true;
 	}
-/*
+
 	if(area > 100) {
 	cout << area << endl;
 	}
