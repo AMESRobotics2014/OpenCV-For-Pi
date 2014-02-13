@@ -33,7 +33,7 @@ double hori, vert;
    //omit
 // }return area;
 //}return area;
-
+/*
 bool autonomous (double a, double  b)
 {
 	hot = false;
@@ -46,11 +46,11 @@ if (area < 3) {
 	//cout << "Hot" << endl;
 	hot = true;
 	}
-/*
+
 	if(area > 100) {
 	cout << area << endl;
 	}
-*/
+
 }
 	return hot;
 }
@@ -73,7 +73,7 @@ double teleop (float a, float b)
 
 	return distance;
 }
-
+*/
 int main()
 {
     //VideoCapture imgcapture(CV_CAP_ANY);
@@ -100,7 +100,7 @@ int main()
 	cvThreshold(gray,gray,60,255,CV_THRESH_BINARY);
 
 	cvShowImage("Camera_Output2", gray);
-
+/*
 	cvFindContours(gray, storage,&contours, sizeof(CvContour), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE, cvPoint(0,0));	
 	while (contours) {
 	   result = cvApproxPoly(contours, sizeof(CvContour), storage, CV_POLY_APPROX_DP, cvContourPerimeter(contours)*0.02, 0);
@@ -179,7 +179,7 @@ int main()
 		else {
 		cout << "Goal is Cool" <<endl;
 		}
-*/
+
 
 		double distancefinal = teleop(height, width);
 		//cout << distancefinal << endl;
@@ -198,7 +198,7 @@ int main()
 
 	}
 	//cvShowImage("Camera_Output2", frame);
-
+*/
 	if (char(key) == 27) {
 	 // cvDestroyAllWindows();
 	 // cvReleaseMemStorage(&storage);
