@@ -103,8 +103,7 @@ int main()
 	cvShowImage("Camera_Output2", frame2);
 	//cvShowImage("Camera_Output2", gray);
 
-	//cvFindContours(gray, storage,&contours, sizeof(CvContour), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE, cvPoint(0,0));	
-        cvFindContours(frame2, storage,&contours, sizeof(CvContour), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE, cvPoint(0,0));
+	cvFindContours(gray, storage,&contours, sizeof(CvContour), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE, cvPoint(0,0));	
 
 	while (contours) {
 	   result = cvApproxPoly(contours, sizeof(CvContour), storage, CV_POLY_APPROX_DP, cvContourPerimeter(contours)*0.02, 0);
@@ -153,7 +152,7 @@ int main()
 		float  width = (sidetop + sidebottom)/2;
 
 		if(height > 0) {
-		//cout << height <<endl;
+		cout << height <<endl;
 	 	}
 
 		if(width > 0) {
