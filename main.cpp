@@ -17,11 +17,14 @@
 #include <stdio.h>
 #include <math.h>
 
-using namespace std;
+ using namespace std;
 using namespace cv;
 char key;
 
 bool hot;
+double  firstd, secondd;
+double hori, vert;
+
 
 //public static removeNoise(int a, int b){
 //float area = a * b;
@@ -36,8 +39,8 @@ bool autonomous (double a, double  b)
 	hot = false;
 
 	double area = a * b;
-
-	cout << area << endl;
+if (area < 3) {
+	//cout << area << endl;
 
 	if(area > 660 && area < 760) {
 	//cout << "Hot" << endl;
@@ -48,12 +51,13 @@ bool autonomous (double a, double  b)
 	cout << area << endl;
 	}
 */
+}
 	return hot;
 }
 //		height,width
 double teleop (float a, float b)
 {
-	double distance, firstd, secondd;
+	double distance;
 
  	if(a>b) {
 
@@ -81,6 +85,9 @@ int main()
    do
    {
 	IplImage* frame = cvQueryFrame(capture);
+	IplImage* get = cvCreateImage(cvGetSize(frame), IPL_DEPTH_8U, 3);
+	IplImage* get2 = cvCreateImage(cvGetSize(frame), IPL_DEPTH_8U, 1);
+	IplImage* get3 = cvCreateImage(cvGetSize(frame), IPL_DEPTH_8U, 1);
 	IplImage* graybefore = cvCreateImage(cvGetSize(frame),8,1);
 	IplImage* gray = cvCreateImage(cvGetSize(frame),8,1);
 	CvSeq* contours;
@@ -90,9 +97,9 @@ int main()
 	key = cvWaitKey(10);
 
 	cvCvtColor(frame,gray,CV_BGR2GRAY);
-	cvThreshold(gray,gray,80,255,CV_THRESH_BINARY);
+	cvThreshold(gray,gray,60,255,CV_THRESH_BINARY);
 
-	//cvShowImage("Camera_Output2", gray);
+	cvShowImage("Camera_Output2", gray);
 
 	cvFindContours(gray, storage,&contours, sizeof(CvContour), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE, cvPoint(0,0));	
 	while (contours) {
@@ -140,20 +147,32 @@ int main()
 		float sidetop = npt[2].x - npt[0].x;
 		float sidebottom = npt[3].x - npt[1].x;
 		float  width = (sidetop + sidebottom)/2;
-/*
+
 		if(height > 0) {
-		cout << height <<endl;
-		}
+		//cout << height <<endl;
+	 	}
 
 		if(width > 0) {
-		cout << width << endl;
+		//cout << width << endl;
+		}
+
+
+/*		if(height<width) {
+		hori = npt[0].x;
+		}
+
+		if(width<height) {
+		vert = npt[0].x;
 		}
 */
-		int red = 0;
-		int green = 255;
-		
+	/*	if(hori<vert) {
+		cout << "Goal is on the left." <<endl;
+		}else if(vert<hori) {
+		cout << "Goal is on the right." <<endl;
+		}
+
 		hot = autonomous(height, width);
-/*
+
 		if(hot == true) {
 		cout << "Goal is Hot" << endl;
 		}
@@ -162,58 +181,67 @@ int main()
 		}
 */
 
-		if (hot) {
-			red = 255;
-			green = 0;
-		}
-		else {
-			red = 0;
-			green = 255;
-		}
-
 		double distancefinal = teleop(height, width);
 		//cout << distancefinal << endl;
 
-		cvLine(frame, *pt[0], *pt[1], cvScalar(0, green, red), 4);
-		cvLine(frame, *pt[1], *pt[2], cvScalar(0, green, red), 4);
-		cvLine(frame, *pt[2], *pt[3], cvScalar(0, green, red), 4);
-		cvLine(frame, *pt[3], *pt[0], cvScalar(0, green, red), 4);
+		cvLine(frame, *pt[0], *pt[1], cvScalar(0, 255, 0), 4);
+		cvLine(frame, *pt[1], *pt[2], cvScalar(0, 255, 0), 4);
+		cvLine(frame, *pt[2], *pt[3], cvScalar(0, 255, 0), 4);
+		cvLine(frame, *pt[3], *pt[0], cvScalar(0, 255, 0), 4);
 
 	   }
 	    	contours = contours->h_next;
+		//cvSmooth(frame, get, CV_GAUSSIAN, 11, 11);
+		//cvCvtColor(get, get3, CV_RGB2GRAY);
+		//cvCanny(get2, get3, 10, 10, 3);
+		//Canny(capture, contours, 35, 90);
 
 	}
-	cvShowImage("Camera_Output2", frame);
+	//cvShowImage("Camera_Output2", frame);
 
 	if (char(key) == 27) {
 	 // cvDestroyAllWindows();
 	 // cvReleaseMemStorage(&storage);
 	 // cvReleaseImage(frame);
 	 // cvReleaseImage(gray);
-	   break;	
+	   break;
 	}
 
  	if (char(key) == 99) {
 	   //counter++;
 
-	   cvSaveImage("Im age Bro.pgm", frame);	
+	   cvSaveImage("Im age Bro.pgm", frame);
 	}
 
-	if (char(key) == 113) {
-		cvSaveImage("5ft.jpg", frame);
+	if (char(key) == 49) {
+		cvSaveImage("real5ft.jpg", frame);
 }
-	if (char(key) == 119) {
-		cvSaveImage("10ft.jpg",frame);
+	if (char(key) == 50) {
+		cvSaveImage("real7ft6in.jpg",frame);
 }
-	if (char(key) == 101) {
-		cvSaveImage("15ft.jpg",frame);
+	if (char(key) == 51) {
+		cvSaveImage("real10ft.jpg",frame);
 }
-	if (char(key) == 114) {
-		cvSaveImage("20ft.jpg", frame);
+	if (char(key) == 52) {
+		cvSaveImage("real12ft6in.jpg", frame);
 }
-	if (char(key) == 116) {
-		cvSaveImage("25ft.jpg", frame);
+	if (char(key) == 53) {
+		cvSaveImage("real15ft.jpg", frame);
 }
+if (char(key) == 54) {
+		cvSaveImage("real17ft6in.jpg", frame);
+}
+
+if (char(key) == 55) {
+		cvSaveImage("real20ft.jpg", frame);
+}
+if (char(key) == 56) {
+		cvSaveImage("real22ft5in.jpg", frame);
+}
+if (char(key) == 57) {
+		cvSaveImage("real15ft.jpg", frame);
+}
+
 
    }while(true);
 
