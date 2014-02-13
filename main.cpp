@@ -33,7 +33,7 @@ double hori, vert;
    //omit
 // }return area;
 //}return area;
-/*
+
 bool autonomous (double a, double  b)
 {
 	hot = false;
@@ -46,11 +46,11 @@ if (area < 3) {
 	//cout << "Hot" << endl;
 	hot = true;
 	}
-
+/*
 	if(area > 100) {
 	cout << area << endl;
 	}
-
+*/
 }
 	return hot;
 }
@@ -73,7 +73,7 @@ double teleop (float a, float b)
 
 	return distance;
 }
-*/
+
 int main()
 {
     //ideoCapture imgcapture(CV_CAP_ANY);
@@ -84,7 +84,7 @@ int main()
 	cvSetCaptureProperty(capture, CV_CAP_PROP_BRIGHTNESS, 0.7);
    do
    {
-	IplImage* frame2 = cvLoadImage("real5ft.jpg");
+	IplImage* frame2 = cvLoadImage("real7ft6in.jpg", CV_LOAD_IMAGE_COLOR);
 	IplImage* frame = cvQueryFrame(capture);
 	IplImage* get = cvCreateImage(cvGetSize(frame), IPL_DEPTH_8U, 3);
 	IplImage* get2 = cvCreateImage(cvGetSize(frame), IPL_DEPTH_8U, 1);
@@ -100,9 +100,9 @@ int main()
 	cvCvtColor(frame,gray,CV_BGR2GRAY);
 	cvThreshold(gray,gray,70,255,CV_THRESH_BINARY);
 
-	//cvShowImage("Camera_Output2", frame2);
-	cvShowImage("Camera_Output2", gray);
-/*
+	cvShowImage("Camera_Output2", frame2);
+	//cvShowImage("Camera_Output2", gray);
+
 	cvFindContours(gray, storage,&contours, sizeof(CvContour), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE, cvPoint(0,0));	
 	while (contours) {
 	   result = cvApproxPoly(contours, sizeof(CvContour), storage, CV_POLY_APPROX_DP, cvContourPerimeter(contours)*0.02, 0);
@@ -172,7 +172,7 @@ int main()
 		}else if(vert<hori) {
 		cout << "Goal is on the right." <<endl;
 		}
-
+*/
 		hot = autonomous(height, width);
 
 		if(hot == true) {
@@ -200,7 +200,7 @@ int main()
 
 	}
 	//cvShowImage("Camera_Output2", frame);
-*/
+
 	if (char(key) == 27) {
 	 // cvDestroyAllWindows();
 	 // cvReleaseMemStorage(&storage);
