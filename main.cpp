@@ -76,14 +76,15 @@ double teleop (float a, float b)
 
 int main()
 {
-    //VideoCapture imgcapture(CV_CAP_ANY);
+    //ideoCapture imgcapture(CV_CAP_ANY);
    cvNamedWindow("Camera_Output2", 1);
-   CvCapture* capture = cvCreateCameraCapture(0);
+   	CvCapture* capture = cvCreateCameraCapture(0);
 	cvSetCaptureProperty(capture, CV_CAP_PROP_FRAME_WIDTH, 320);
 	cvSetCaptureProperty(capture, CV_CAP_PROP_FRAME_HEIGHT, 240);
 	cvSetCaptureProperty(capture, CV_CAP_PROP_BRIGHTNESS, 0.7);
    do
    {
+	IplImage* frame2 = cvLoadImage("real5ft.jpg");
 	IplImage* frame = cvQueryFrame(capture);
 	IplImage* get = cvCreateImage(cvGetSize(frame), IPL_DEPTH_8U, 3);
 	IplImage* get2 = cvCreateImage(cvGetSize(frame), IPL_DEPTH_8U, 1);
@@ -97,8 +98,9 @@ int main()
 	key = cvWaitKey(10);
 
 	cvCvtColor(frame,gray,CV_BGR2GRAY);
-	cvThreshold(gray,gray,60,255,CV_THRESH_BINARY);
+	cvThreshold(gray,gray,62,255,CV_THRESH_BINARY);
 
+	//cvShowImage("Camera_Output2", frame2);
 	cvShowImage("Camera_Output2", gray);
 
 	cvFindContours(gray, storage,&contours, sizeof(CvContour), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE, cvPoint(0,0));	
@@ -214,19 +216,19 @@ int main()
 	}
 
 	if (char(key) == 49) {
-		cvSaveImage("real5ft.jpg", frame);
+		cvSaveImage("real5ft.jpg", gray);
 }
 	if (char(key) == 50) {
-		cvSaveImage("real7ft6in.jpg",frame);
+		cvSaveImage("real7ft6in.jpg",gray);
 }
 	if (char(key) == 51) {
-		cvSaveImage("real10ft.jpg",frame);
+		cvSaveImage("real10ft.jpg",gray);
 }
 	if (char(key) == 52) {
-		cvSaveImage("real12ft6in.jpg", frame);
+		cvSaveImage("real12ft6in.jpg", gray);
 }
 	if (char(key) == 53) {
-		cvSaveImage("real15ft.jpg", frame);
+		cvSaveImage("real15ft.jpg", gray);
 }
 if (char(key) == 54) {
 		cvSaveImage("real17ft6in.jpg", frame);
