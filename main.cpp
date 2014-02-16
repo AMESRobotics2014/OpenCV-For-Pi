@@ -16,33 +16,24 @@
 #include <iostream>
 #include <stdio.h>
 #include <math.h>
+#include <fstream>
 
  using namespace std;
 using namespace cv;
 char key;
 
 bool hot;
-double  firstd, secondd;
+double  firstd, secondd, distancefinal;
 double hori, vert;
-
-
-//public static removeNoise(int a, int b){
-//float area = a * b;
-
- //if(area < smallarea){
-   //omit
-// }return area;
-//}return area;
-
-bool autonomous (double a, double  b)
+double mindist=5,maxdist=35;
+bool autonomous (double a)
 {
 	hot = false;
 
-	double area = a * b;
+	double area = a;
 if (area < 3) {
-	//cout << area << endl;
 
-	if(area > 660 && area < 760) {
+	if(area > 140 && area < 200) {
 	//cout << "Hot" << endl;
 	hot = true;
 	}
@@ -55,36 +46,47 @@ if (area < 3) {
 	return hot;
 }
 //		height,width
-double teleop (float a, float b)
+double teleop (double a, double b)
 {
 	double distance;
 
  	if(a>b) {
 
-	firstd = 44.099407801909 * pow(0.91175211621759,a);
+	firstd = 41.43139314 * pow(.9859750957,a);
 
 }
 	if(b>a) {
 
-	secondd = 1234 * pow(234,a);
+	secondd = 35.670583878669 * pow(.98285941516385,b);
 
 }
-	distance = (firstd + secondd)/2;
-
+	distance = (secondd + firstd) / 2;
 	return distance;
+}
+
+double angle (double a)
+{
+
+	double final;
+
+	final = a;
+
+	return final;
+
 }
 
 int main()
 {
-    //ideoCapture imgcapture(CV_CAP_ANY);
-   cvNamedWindow("Camera_Output2", 1);
+	double potread;
+    	//videoCapture imgcapture(CV_CAP_ANY);
+   	cvNamedWindow("Camera_Output2", 1);
    	CvCapture* capture = cvCreateCameraCapture(0);
 	cvSetCaptureProperty(capture, CV_CAP_PROP_FRAME_WIDTH, 320);
 	cvSetCaptureProperty(capture, CV_CAP_PROP_FRAME_HEIGHT, 240);
 	cvSetCaptureProperty(capture, CV_CAP_PROP_BRIGHTNESS, 0.7);
    do
    {
-	IplImage* frame2 = cvLoadImage("real7ft6in.jpg", CV_LOAD_IMAGE_COLOR);
+	//IplImage* frame2 = cvLoadImage("real5ft.jpg");
 	IplImage* frame = cvQueryFrame(capture);
 	IplImage* get = cvCreateImage(cvGetSize(frame), IPL_DEPTH_8U, 3);
 	IplImage* get2 = cvCreateImage(cvGetSize(frame), IPL_DEPTH_8U, 1);
@@ -98,21 +100,18 @@ int main()
 	key = cvWaitKey(10);
 
 	cvCvtColor(frame,gray,CV_BGR2GRAY);
-	cvThreshold(gray,gray,70,255,CV_THRESH_BINARY);
-
-	cvShowImage("Camera_Output2", frame2);
-	//cvShowImage("Camera_Output2", gray);
+	cvThreshold(gray,gray,64,255,CV_THRESH_BINARY);
+	//cvShowImage("Camera_Output2", frame2);
+	cvShowImage("Camera_Output2", gray);
 
 	cvFindContours(gray, storage,&contours, sizeof(CvContour), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE, cvPoint(0,0));	
-
 	while (contours) {
 	   result = cvApproxPoly(contours, sizeof(CvContour), storage, CV_POLY_APPROX_DP, cvContourPerimeter(contours)*0.02, 0);
 
-//	   removeNoise();
 	   if (result -> total == 4) {
 
 		CvPoint *pt[4];
-		CvPoint npt[4];
+		CvPoint npt[6];
 	     	for (int i = 0; i < 4; i++) {
 		    pt[i] = (CvPoint*)cvGetSeqElem(result, i);
 		}
@@ -120,27 +119,36 @@ int main()
 		//cout <<"pt 0: " << pt[0]->x<< ", "  << pt[0]->y << endl;
 		//cout <<"pt 1: " << pt[1]->x<< ", "  << pt[1]->y << endl;
 		//cout <<"pt 2: " << pt[2]->x<< ", "  << pt[2]->y << endl;
-		//cout <<"pt 3: " << pt[3]->x<< ", "  << pt[3]->y << endl
+		//cout <<"pt 3: " << pt[3]->x<< ", "  << pt[3]->y << endl;
+
 	int ptzeroy=pt[0]->y;
 	int ptoney=pt[1]->y;
 	int pttwoy=pt[2]->y;
 	int ptthreey=pt[3]->y;
-	int avgy = ((ptzeroy) + (ptoney) + (pttwoy) + (ptthreey));
+	int avgy = ((ptzeroy) + (ptoney) + (pttwoy) + (ptthreey))/4;
 	int avgx = ((pt[0]->x) + (pt[1]->x) + (pt[2]->x) + (pt[3]->x))/4;
+	//cout << "Average y: " << avgy <<endl;
+	//cout << "Average x: " << avgx <<endl;
 	for(int a = 0;a < 4;a++) {
 		if(pt[a]->y > avgy && pt[a]->x > avgx) {
-		npt[0]= *pt[a];
+		npt[3]= *pt[a];
 	}
 		if(pt[a]->y < avgy && pt[a]->x > avgx) {
-		npt[1]= *pt[a];
+		npt[2]= *pt[a];
 	}
 		if(pt[a]->y > avgy && pt[a]->x < avgx) {
-		npt[2] = *pt[a];
+		npt[1] = *pt[a];
 	}
 		if(pt[a]->y < avgy && pt[a]->x < avgx) {
-		npt[3] = *pt[a];
+		npt[0] = *pt[a];
 	}
+/*
+	npt[5].x = avgx;
+	npt[5].y = (npt[0].y + npt[2].y) / 2;
 
+	npt[6].x = avgx;
+	npt[6].y = (npt[1].y + npt[3].y) / 2;
+*/
 	}
 
 		float sideleft = npt[1].y - npt[0].y;
@@ -152,50 +160,48 @@ int main()
 		float  width = (sidetop + sidebottom)/2;
 
 		if(height > 0) {
-		cout << height <<endl;
+		cout <<"Height: " << height <<endl;
 	 	}
 
 		if(width > 0) {
-		//cout << width << endl;
+		cout <<"Width: " << width << endl;
 		}
 
-
-/*		if(height<width) {
-		hori = npt[0].x;
+		double area = height * width;
+		if(area>0) {
+		//cout <<"Area: " << area <<endl;
 		}
 
-		if(width<height) {
-		vert = npt[0].x;
-		}
-*/
-	/*	if(hori<vert) {
-		cout << "Goal is on the left." <<endl;
-		}else if(vert<hori) {
-		cout << "Goal is on the right." <<endl;
-		}
-*/
-		hot = autonomous(height, width);
+		if(height>0 && width>0) {
+		hot = autonomous(area);
 
 		if(hot == true) {
-		cout << "Goal is Hot" << endl;
+		//cout << "Goal is Hot" << endl;
 		}
 		else {
-		cout << "Goal is Cool" <<endl;
+		//cout << "Goal is Cool" <<endl;
+		}
 		}
 
+		if(height>0 && width>0) {
+		distancefinal = teleop(height, width);
+//if(distancefinal>mindist && distancefinal<maxdist)
+		cout << "Distance: " << distancefinal << endl;
+		}
+		if(distancefinal > 0) {
+		potread = angle(distancefinal);
+		//cout<< "Reading for Hot: " << potread <<endl;
+		}
 
-		double distancefinal = teleop(height, width);
-		//cout << distancefinal << endl;
-
-		cvLine(frame, *pt[0], *pt[1], cvScalar(0, 255, 0), 4);
-		cvLine(frame, *pt[1], *pt[2], cvScalar(0, 255, 0), 4);
-		cvLine(frame, *pt[2], *pt[3], cvScalar(0, 255, 0), 4);
-		cvLine(frame, *pt[3], *pt[0], cvScalar(0, 255, 0), 4);
+		cvLine(frame, npt[0], npt[1], cvScalar(0, 255, 0), 4);
+		cvLine(frame, npt[1], npt[2], cvScalar(0, 255, 0), 4);
+		cvLine(frame, npt[2], npt[3], cvScalar(0, 255, 0), 4);
+		cvLine(frame, npt[3], npt[0], cvScalar(0, 255, 0), 4);
 
 	   }
 	    	contours = contours->h_next;
 		//cvSmooth(frame, get, CV_GAUSSIAN, 11, 11);
-		//cvCvtColor(get, get3, CV_RGB2GRAY);
+		//cvCvtColor(get, get2, CV_RGB2GRAY);
 		//cvCanny(get2, get3, 10, 10, 3);
 		//Canny(capture, contours, 35, 90);
 
@@ -245,6 +251,11 @@ if (char(key) == 57) {
 		cvSaveImage("real15ft.jpg", frame);
 }
 
+ofstream test;
+test.open ("test.txt");
+test <<"Distancefinal, " << distancefinal <<endl;
+test <<"Hot," << hot<<endl;
+test.close();
 
    }while(true);
 
