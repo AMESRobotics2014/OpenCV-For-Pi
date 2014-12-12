@@ -41,6 +41,7 @@ if (area < 3) {
 	if(area > 100) {
 	cout << area << endl;
 	}
+	//Tests area to see whether or not the goal is hot.
 */
 }
 	return hot;
@@ -62,7 +63,7 @@ double teleop (double a, double b)
 }
 	distance = (secondd + firstd) / 2;
 	return distance;
-}
+}//uses the height and width of the rectangles to find how far we are from target.
 
 double angle (double a)
 {
@@ -83,7 +84,7 @@ int main()
    	CvCapture* capture = cvCreateCameraCapture(0);
 	cvSetCaptureProperty(capture, CV_CAP_PROP_FRAME_WIDTH, 320);
 	cvSetCaptureProperty(capture, CV_CAP_PROP_FRAME_HEIGHT, 240);
-	cvSetCaptureProperty(capture, CV_CAP_PROP_BRIGHTNESS, 0.7);
+	cvSetCaptureProperty(capture, CV_CAP_PROP_BRIGHTNESS, 0.7); //createwindow to put image from camera in.
    do
    {
 	//IplImage* frame2 = cvLoadImage("real5ft.jpg");
@@ -92,7 +93,7 @@ int main()
 	IplImage* get2 = cvCreateImage(cvGetSize(frame), IPL_DEPTH_8U, 1);
 	IplImage* get3 = cvCreateImage(cvGetSize(frame), IPL_DEPTH_8U, 1);
 	IplImage* graybefore = cvCreateImage(cvGetSize(frame),8,1);
-	IplImage* gray = cvCreateImage(cvGetSize(frame),8,1);
+	IplImage* gray = cvCreateImage(cvGetSize(frame),8,1);//place image in the fram.
 	CvSeq* contours;
 	CvSeq* result;
 	CvMemStorage* storage = cvCreateMemStorage(0);
@@ -102,13 +103,13 @@ int main()
 	cvCvtColor(frame,gray,CV_BGR2GRAY);
 	cvThreshold(gray,gray,64,255,CV_THRESH_BINARY);
 	//cvShowImage("Camera_Output2", frame2);
-	cvShowImage("Camera_Output2", gray);
+	cvShowImage("Camera_Output2", gray);//we use this to adjust the image so that the image is easier to use.
 
-	cvFindContours(gray, storage,&contours, sizeof(CvContour), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE, cvPoint(0,0));	
+	cvFindContours(gray, storage,&contours, sizeof(CvContour), CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE, cvPoint(0,0));	//We use this to find contours, or edges on our image.
 	while (contours) {
 	   result = cvApproxPoly(contours, sizeof(CvContour), storage, CV_POLY_APPROX_DP, cvContourPerimeter(contours)*0.02, 0);
 
-	   if (result -> total == 4) {
+	   if (result -> total == 4) { // If we have 4 edges ( rectangle) than go through with it.
 
 		CvPoint *pt[4];
 		CvPoint npt[6];
@@ -128,7 +129,7 @@ int main()
 	int avgy = ((ptzeroy) + (ptoney) + (pttwoy) + (ptthreey))/4;
 	int avgx = ((pt[0]->x) + (pt[1]->x) + (pt[2]->x) + (pt[3]->x))/4;
 	//cout << "Average y: " << avgy <<endl;
-	//cout << "Average x: " << avgx <<endl;
+	//cout << "Average x: " << avgx <<endl; //averages the points of each rectangle.
 	for(int a = 0;a < 4;a++) {
 		if(pt[a]->y > avgy && pt[a]->x > avgx) {
 		npt[3]= *pt[a];
@@ -141,7 +142,7 @@ int main()
 	}
 		if(pt[a]->y < avgy && pt[a]->x < avgx) {
 		npt[0] = *pt[a];
-	}
+	} //we use this to place our points where we know them to be. 
 /*
 	npt[5].x = avgx;
 	npt[5].y = (npt[0].y + npt[2].y) / 2;
@@ -158,7 +159,7 @@ int main()
 		float sidetop = npt[2].x - npt[0].x;
 		float sidebottom = npt[3].x - npt[1].x;
 		float  width = (sidetop + sidebottom)/2;
-
+		//find height and width of rectangles
 		if(height > 0) {
 		cout <<"Height: " << height <<endl;
 	 	}
@@ -181,25 +182,27 @@ int main()
 		else {
 		//cout << "Goal is Cool" <<endl;
 		}
-		}
+		}//Sends the area to the function that we need. Also reports the result.
 
 		if(height>0 && width>0) {
 		distancefinal = teleop(height, width);
 //if(distancefinal>mindist && distancefinal<maxdist)
 		cout << "Distance: " << distancefinal << endl;
-		}
+		}// find distance with height and width
+		
 		if(distancefinal > 0) {
 		potread = angle(distancefinal);
 		//cout<< "Reading for Hot: " << potread <<endl;
-		}
+		}//Find angle if we could.... using potentiometer.
 
 		cvLine(frame, npt[0], npt[1], cvScalar(0, 255, 0), 4);
 		cvLine(frame, npt[1], npt[2], cvScalar(0, 255, 0), 4);
 		cvLine(frame, npt[2], npt[3], cvScalar(0, 255, 0), 4);
 		cvLine(frame, npt[3], npt[0], cvScalar(0, 255, 0), 4);
+		//Draw lines around the rectangles on the picutre
 
 	   }
-	    	contours = contours->h_next;
+	    	contours = contours->h_next;//goes to the next set of countors.
 		//cvSmooth(frame, get, CV_GAUSSIAN, 11, 11);
 		//cvCvtColor(get, get2, CV_RGB2GRAY);
 		//cvCanny(get2, get3, 10, 10, 3);
@@ -214,7 +217,7 @@ int main()
 	 // cvReleaseImage(frame);
 	 // cvReleaseImage(gray);
 	   break;
-	}
+	}//lets us shut down the cycle.
 
  	if (char(key) == 99) {
 	   //counter++;
@@ -255,11 +258,11 @@ ofstream test;
 test.open ("test.txt");
 test <<"Distancefinal, " << distancefinal <<endl;
 test <<"Hot," << hot<<endl;
-test.close();
+test.close(); //THe way we are planning to send the info we get to the normal code.
 
    }while(true);
 
    cvReleaseCapture(&capture);
    cvDestroyWindow("Camera_Output");
-   return 0;
+   return 0;//ends program.
 }
